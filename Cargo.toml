@@ -1,0 +1,11 @@
+[package]
+name = "sparx-cipher"
+version = "0.1.0"
+authors = ["quininer <quininer@live.com>"]
+
+[dependencies]
+byteorder = { version = "1", default-features = false }
+
+[features]
+default = [ "x64_128" ]
+x64_128 = []
