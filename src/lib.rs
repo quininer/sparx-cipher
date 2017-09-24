@@ -31,6 +31,21 @@ pub mod params {
     pub(crate) const BRANCHES: usize = 4;
 }
 
+#[cfg(feature = "x128_256")]
+pub mod params {
+    pub const BLOCK_BYTES: usize = 128 / 8;
+    pub const KEY_BYTES: usize = 256 / 8;
+    pub type SubKey = [[u32; ROUNDS_PER_STEP]; BRANCHES * STEPS + 1];
+
+    pub const BLOCK_SIZE: usize = BLOCK_BYTES / 4; // TODO mem::size_of::<u32>()
+    pub const KEY_SIZE: usize = KEY_BYTES / 4;
+
+    const ROUNDS: usize = 40;
+    pub(crate) const ROUNDS_PER_STEP: usize = ROUNDS / STEPS;
+    pub(crate) const STEPS: usize = 10;
+    pub(crate) const BRANCHES: usize = 4;
+}
+
 pub mod block;
 
 use core::mem;

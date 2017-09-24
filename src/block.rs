@@ -35,7 +35,7 @@ fn l_inv(x: &mut [u32; BLOCK_SIZE]) {
     x[1] ^= x[0] ^ merge!(tmp, tmp);
 }
 
-#[cfg(any(feature = "x128_128"))]
+#[cfg(any(feature = "x128_128", feature = "x128_256"))]
 #[inline]
 fn l(x: &mut [u32; BLOCK_SIZE]) {
     let (x0l, x0r) = split!(x[0]);
@@ -50,7 +50,7 @@ fn l(x: &mut [u32; BLOCK_SIZE]) {
     x.swap(1, 3);
 }
 
-#[cfg(any(feature = "x128_128"))]
+#[cfg(any(feature = "x128_128", feature = "x128_256"))]
 #[inline]
 fn l_inv(x: &mut [u32; BLOCK_SIZE]) {
     x.swap(0, 2);
@@ -100,6 +100,31 @@ fn key_perm(k: &mut [u32; KEY_SIZE], c: u16) {
     k[2] = k[1];
     k[1] = k[0];
     k[0] = tmp;
+}
+
+#[cfg(feature = "x128_256")]
+fn key_perm(k: &mut [u32; KEY_SIZE], c: u16) {
+    a(&mut k[0]);
+    let (k0l, k0r) = split!(k[0]);
+    let (k1l, k1r) = split!(k[1]);
+    k[1] = merge!(k1l.wrapping_add(k0l), k1r.wrapping_add(k0r));
+
+    a(&mut k[4]);
+    let (k2l, k2r) = split!(k[4]);
+    let (k3l, k3r) = split!(k[5]);
+    k[5] = merge!(k3l.wrapping_add(k2l), k3r.wrapping_add(k2r).wrapping_add(c));
+
+    let tmp1 = k[5];
+    let tmp2 = k[6];
+    let tmp3 = k[7];
+    k[7] = k[4];
+    k[6] = k[3];
+    k[5] = k[2];
+    k[4] = k[1];
+    k[3] = k[0];
+    k[0] = tmp1;
+    k[1] = tmp2;
+    k[2] = tmp3;
 }
 
 #[inline]
