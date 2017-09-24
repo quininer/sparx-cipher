@@ -1,13 +1,14 @@
 #![no_std]
 
+
 #[cfg(feature = "x64_128")]
 pub mod params {
     pub const BLOCK_BYTES: usize = 64 / 8;
     pub const KEY_BYTES: usize = 128 / 8;
-    pub type SUBKEY = [[u32; ROUNDS_PER_STEP]; BRANCHES * STEPS + 1];
+    pub type SubKey = [[u32; ROUNDS_PER_STEP]; BRANCHES * STEPS + 1];
 
-    pub(crate) const BLOCK_SIZE: usize = BLOCK_BYTES / 4; // TODO mem::size_of::<u32>()
-    pub(crate) const KEY_SIZE: usize = KEY_BYTES / 4;
+    pub const BLOCK_SIZE: usize = BLOCK_BYTES / 4; // TODO mem::size_of::<u32>()
+    pub const KEY_SIZE: usize = KEY_BYTES / 4;
 
     const ROUNDS: usize = 24;
     pub(crate) const ROUNDS_PER_STEP: usize = ROUNDS / STEPS;
@@ -15,21 +16,36 @@ pub mod params {
     pub(crate) const BRANCHES: usize = 2;
 }
 
+#[cfg(feature = "x128_128")]
+pub mod params {
+    pub const BLOCK_BYTES: usize = 128 / 8;
+    pub const KEY_BYTES: usize = 128 / 8;
+    pub type SubKey = [[u32; ROUNDS_PER_STEP]; BRANCHES * STEPS + 1];
+
+    pub const BLOCK_SIZE: usize = BLOCK_BYTES / 4; // TODO mem::size_of::<u32>()
+    pub const KEY_SIZE: usize = KEY_BYTES / 4;
+
+    const ROUNDS: usize = 32;
+    pub(crate) const ROUNDS_PER_STEP: usize = ROUNDS / STEPS;
+    pub(crate) const STEPS: usize = 8;
+    pub(crate) const BRANCHES: usize = 4;
+}
+
 pub mod block;
 
 use core::mem;
-use params::{ SUBKEY, KEY_BYTES, BLOCK_BYTES, KEY_SIZE, BLOCK_SIZE };
+use params::*;
 use block::{ key_schedule, encrypt_block, decrypt_block };
 
 
 #[derive(Clone)]
-pub struct Sparx(SUBKEY);
+pub struct Sparx(SubKey);
 
 impl Sparx {
     #[inline]
     pub fn new(key: &[u8; KEY_BYTES]) -> Self {
         let mut block = [0; KEY_SIZE];
-        let mut subkey = Default::default();
+        let mut subkey = [[0; ROUNDS_PER_STEP]; BRANCHES * STEPS + 1];
         block.copy_from_slice(array_to_key(key));
         key_schedule(&mut block, &mut subkey);
         Sparx(subkey)
