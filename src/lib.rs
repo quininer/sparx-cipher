@@ -7,7 +7,7 @@ pub mod params {
     pub const KEY_BYTES: usize = 128 / 8;
     pub type SubKey = [[u32; ROUNDS_PER_STEP]; BRANCHES * STEPS + 1];
 
-    pub const BLOCK_SIZE: usize = BLOCK_BYTES / 4; // TODO mem::size_of::<u32>()
+    pub const BLOCK_SIZE: usize = BLOCK_BYTES / 4;
     pub const KEY_SIZE: usize = KEY_BYTES / 4;
 
     const ROUNDS: usize = 24;
@@ -22,7 +22,7 @@ pub mod params {
     pub const KEY_BYTES: usize = 128 / 8;
     pub type SubKey = [[u32; ROUNDS_PER_STEP]; BRANCHES * STEPS + 1];
 
-    pub const BLOCK_SIZE: usize = BLOCK_BYTES / 4; // TODO mem::size_of::<u32>()
+    pub const BLOCK_SIZE: usize = BLOCK_BYTES / 4;
     pub const KEY_SIZE: usize = KEY_BYTES / 4;
 
     const ROUNDS: usize = 32;
@@ -37,7 +37,7 @@ pub mod params {
     pub const KEY_BYTES: usize = 256 / 8;
     pub type SubKey = [[u32; ROUNDS_PER_STEP]; BRANCHES * STEPS + 1];
 
-    pub const BLOCK_SIZE: usize = BLOCK_BYTES / 4; // TODO mem::size_of::<u32>()
+    pub const BLOCK_SIZE: usize = BLOCK_BYTES / 4;
     pub const KEY_SIZE: usize = KEY_BYTES / 4;
 
     const ROUNDS: usize = 40;

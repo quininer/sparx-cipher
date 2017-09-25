@@ -143,6 +143,8 @@ fn a_inv(x: &mut u32) {
     *x = merge!(l, r);
 }
 
+// --
+
 pub fn key_schedule(master_key: &mut [u32; KEY_SIZE], subkey: &mut SubKey) {
     for c in 0..(BRANCHES * STEPS + 1) {
         subkey[c][..ROUNDS_PER_STEP].copy_from_slice(&master_key[..ROUNDS_PER_STEP]);

@@ -2,6 +2,11 @@
 name = "sparx-cipher"
 version = "0.1.0"
 authors = ["quininer <quininer@live.com>"]
+description = "Another SPARX block cipher implementation for Rust"
+repository = "https://github.com/quininer/sparx-cipher"
+keywords = [ "block-cipher", "cryptography" ]
+categories = [ "cryptography", "no-std" ]
+license = "MIT"
 
 [features]
 default = [ "x128_128" ]
