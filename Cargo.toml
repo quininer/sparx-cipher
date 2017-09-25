@@ -8,6 +8,10 @@ keywords = [ "block-cipher", "cryptography" ]
 categories = [ "cryptography", "no-std" ]
 license = "MIT"
 
+[badges]
+travis-ci = { repository = "quininer/sparx-cipher" }
+appveyor = { repository = "quininer/sparx-cipher" }
+
 [features]
 default = [ "x128_128" ]
 x64_128 = []

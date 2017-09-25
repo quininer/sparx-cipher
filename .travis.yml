@@ -1,0 +1,12 @@
+language: rust
+rust:
+    - stable
+cache: cargo
+os:
+    - linux
+    - osx
+
+script:
+    - cargo test --no-default-features --features x64_128
+    - cargo test
+    - cargo test --no-default-features --features x128_256
