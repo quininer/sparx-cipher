@@ -1,4 +1,9 @@
 # Sparx Cipher
+[![travis-ci](https://api.travis-ci.org/quininer/sparx-cipher.svg)](https://travis-ci.org/quininer/sparx-cipher)
+[![appveyor](https://ci.appveyor.com/api/projects/status/tbergoeoonal6nph?svg=true)](https://ci.appveyor.com/project/quininer/sparx-cipher)
+[![crates](https://img.shields.io/crates/v/sparx-cipher.svg)](https://crates.io/crates/sparx-cipher)
+[![license](https://img.shields.io/github/license/quininer/sparx-cipher.svg)](https://github.com/quininer/sparx-cipher/blob/master/LICENSE)
+[![docs.rs](https://docs.rs/sparx-cipher/badge.svg)](https://docs.rs/sparx-cipher/)
 
 Another SPARX block cipher implementation for Rust.
 

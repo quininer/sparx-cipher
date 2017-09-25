@@ -89,6 +89,7 @@ fn array_to_block(x: &mut [u8; BLOCK_BYTES]) -> &mut [u32; BLOCK_SIZE] {
     unsafe { mem::transmute(x) }
 }
 
+#[inline]
 fn array_to_key(x: &[u8; KEY_BYTES]) -> &[u32; KEY_SIZE] {
     unsafe { mem::transmute(x) }
 }
