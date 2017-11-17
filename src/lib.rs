@@ -1,5 +1,9 @@
 #![no_std]
 
+extern crate byteorder;
+
+use byteorder::{ ByteOrder, LittleEndian };
+
 
 #[cfg(feature = "x64_128")]
 pub mod params {
@@ -48,7 +52,6 @@ pub mod params {
 
 pub mod block;
 
-use core::mem;
 use params::*;
 use block::{ key_schedule, encrypt_block, decrypt_block };
 
@@ -68,28 +71,44 @@ impl Sparx {
     pub fn new(key: &[u8; KEY_BYTES]) -> Self {
         let mut block = [0; KEY_SIZE];
         let mut subkey = [[0; ROUNDS_PER_STEP]; BRANCHES * STEPS + 1];
-        block.copy_from_slice(array_to_key(key));
+        LittleEndian::read_u32_into(key, &mut block);
         key_schedule(&mut block, &mut subkey);
         Sparx(subkey)
     }
 
+    #[cfg(target_endian = "little")]
     #[inline]
     pub fn encrypt(&self, b: &mut [u8; BLOCK_BYTES]) {
         encrypt_block(&self.0, array_to_block(b))
     }
 
+    #[cfg(target_endian = "big")]
+    #[inline]
+    pub fn encrypt(&self, b: &mut [u8; BLOCK_BYTES]) {
+        let mut nb = [0; BLOCK_SIZE];
+        LittleEndian::read_u32_into(b, &mut nb);
+        encrypt_block(&self.0, &mut nb);
+        LittleEndian::write_u32_into(&nb, b);
+    }
+
+    #[cfg(target_endian = "little")]
     #[inline]
     pub fn decrypt(&self, b: &mut [u8; BLOCK_BYTES]) {
         decrypt_block(&self.0, array_to_block(b))
     }
+
+    #[cfg(target_endian = "big")]
+    #[inline]
+    pub fn decrypt(&self, b: &mut [u8; BLOCK_BYTES]) {
+        let mut nb = [0; BLOCK_SIZE];
+        LittleEndian::read_u32_into(b, &mut nb);
+        decrypt_block(&self.0, &mut nb);
+        LittleEndian::write_u32_into(&nb, b);
+    }
 }
 
+#[cfg(target_endian = "little")]
 #[inline]
 fn array_to_block(x: &mut [u8; BLOCK_BYTES]) -> &mut [u32; BLOCK_SIZE] {
-    unsafe { mem::transmute(x) }
-}
-
-#[inline]
-fn array_to_key(x: &[u8; KEY_BYTES]) -> &[u32; KEY_SIZE] {
-    unsafe { mem::transmute(x) }
+    unsafe { core::mem::transmute(x) }
 }

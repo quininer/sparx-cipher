@@ -1,6 +1,6 @@
 [package]
 name = "sparx-cipher"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["quininer <quininer@live.com>"]
 description = "Another SPARX block cipher implementation for Rust"
 repository = "https://github.com/quininer/sparx-cipher"
@@ -10,7 +10,10 @@ license = "MIT"
 
 [badges]
 travis-ci = { repository = "quininer/sparx-cipher" }
-appveyor = { repository = "quininer/sparx-cipher" }
+
+[dependencies]
+byteorder = { version = "1.0", default-features = false }
+
 
 [features]
 default = [ "x128_128" ]
