@@ -56,18 +56,10 @@ use params::*;
 use block::{ key_schedule, encrypt_block, decrypt_block };
 
 
+#[derive(Clone)]
 pub struct Sparx(SubKey);
 
-impl Clone for Sparx {
-    fn clone(&self) -> Self {
-        let mut subkey = [[0; ROUNDS_PER_STEP]; BRANCHES * STEPS + 1];
-        subkey.copy_from_slice(&self.0);
-        Sparx(subkey)
-    }
-}
-
 impl Sparx {
-    #[inline]
     pub fn new(key: &[u8; KEY_BYTES]) -> Self {
         let mut block = [0; KEY_SIZE];
         let mut subkey = [[0; ROUNDS_PER_STEP]; BRANCHES * STEPS + 1];
@@ -76,7 +68,6 @@ impl Sparx {
         Sparx(subkey)
     }
 
-    #[inline]
     pub fn encrypt(&self, b: &mut [u8; BLOCK_BYTES]) {
         let nb = array_to_block(b);
         LittleEndian::from_slice_u32(nb);
@@ -84,7 +75,6 @@ impl Sparx {
         LittleEndian::from_slice_u32(nb);
     }
 
-    #[inline]
     pub fn decrypt(&self, b: &mut [u8; BLOCK_BYTES]) {
         let nb = array_to_block(b);
         LittleEndian::from_slice_u32(nb);
