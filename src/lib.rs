@@ -69,21 +69,16 @@ impl Sparx {
     }
 
     pub fn encrypt(&self, b: &mut [u8; BLOCK_BYTES]) {
-        let nb = array_to_block(b);
-        LittleEndian::from_slice_u32(nb);
-        encrypt_block(&self.0, nb);
-        LittleEndian::from_slice_u32(nb);
+        let mut nb = [0; BLOCK_SIZE];
+        LittleEndian::read_u32_into(b, &mut nb);
+        encrypt_block(&self.0, &mut nb);
+        LittleEndian::write_u32_into(&nb, b);
     }
 
     pub fn decrypt(&self, b: &mut [u8; BLOCK_BYTES]) {
-        let nb = array_to_block(b);
-        LittleEndian::from_slice_u32(nb);
-        decrypt_block(&self.0, nb);
-        LittleEndian::from_slice_u32(nb);
+        let mut nb = [0; BLOCK_SIZE];
+        LittleEndian::read_u32_into(b, &mut nb);
+        decrypt_block(&self.0, &mut nb);
+        LittleEndian::write_u32_into(&nb, b);
     }
-}
-
-#[inline]
-fn array_to_block(x: &mut [u8; BLOCK_BYTES]) -> &mut [u32; BLOCK_SIZE] {
-    unsafe { core::mem::transmute(x) }
 }
